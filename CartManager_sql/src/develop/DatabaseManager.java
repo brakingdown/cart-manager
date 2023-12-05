@@ -5,9 +5,9 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class DatabaseManager {
-    private static final String URL = "jdbc:mysql://localhost:3306/Shopping?user=root";
-    private static final String USER = "root";
-    private static final String PASSWORD = "2192245@Yjl";
+    private static final String URL = "jdbc:mysql://localhost:3306/Shopping?user=root"; //Personalised
+    private static final String USER = "root"; //Personalised
+    private static final String PASSWORD = "PASS"; //Personalised
 
     private Connection connect() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
@@ -312,7 +312,7 @@ public class DatabaseManager {
 
     // 获取表头的通用方法
     public String[] getHeaders(String table) throws SQLException {
-        String sql = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'Shopping' AND TABLE_NAME = ? ORDER BY ORDINAL_POSITION";
+        String sql = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'Shopping' AND TABLE_NAME = ? ORDER BY ORDINAL_POSITION"; //Personalised
         ArrayList<String> headers = new ArrayList<>();
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
