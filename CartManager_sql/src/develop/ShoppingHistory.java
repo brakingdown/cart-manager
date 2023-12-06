@@ -16,8 +16,8 @@ public class ShoppingHistory {
 
     public void writeHistory(ArrayList<String[]> shoppingCartList, String purchaseDate) throws SQLException {
         for (String[] item : shoppingCartList) {
-            String 商品名称 = item[1];
-            dbManager.insertShoppingHistory(purchaseDate, 商品名称);
+            String goodsName = item[1];
+            dbManager.insertShoppingHistory(purchaseDate, goodsName);
         }
     }
 

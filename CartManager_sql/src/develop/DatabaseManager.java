@@ -59,203 +59,197 @@ public class DatabaseManager {
     }
 
     // Admin 表的写入方法
-    public void insertAdmin(String 管理员用户名, String 管理员密码) throws SQLException {
+    public void insertAdmin(String adminName, String adminPassword) throws SQLException {
         String sql = "INSERT INTO Admin (管理员用户名, 管理员密码) VALUES (?, ?);";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, 管理员用户名);
-            pstmt.setString(2, 管理员密码);
+            pstmt.setString(1, adminName);
+            pstmt.setString(2, adminPassword);
 
             pstmt.executeUpdate();
         }
     }
 
     // Admin 表的更新方法
-    public void updateAdmin(String 管理员用户名, String 新密码) throws SQLException {
+    public void updateAdmin(String adminName, String newPassword) throws SQLException {
         String sql = "UPDATE Admin SET 管理员密码 = ? WHERE 管理员用户名 = ?;";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, 新密码);
-            pstmt.setString(2, 管理员用户名);
+            pstmt.setString(1, newPassword);
+            pstmt.setString(2, adminName);
 
             pstmt.executeUpdate();
         }
     }
-
-    public void updateUserPasswordByPhone(String phoneNum, String resetPassword) throws SQLException {
-        String sql = "UPDATE User SET 用户密码 = ? WHERE 用户手机号 = ?";
-        try (Connection conn = connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setString(1, resetPassword);
-            pstmt.setString(2, phoneNum);
-
-            pstmt.executeUpdate();
-        }
-    }
-
-    // Admin 表的删除方法
-    public void deleteAdmin(String 管理员用户名) throws SQLException {
-        String sql = "DELETE FROM Admin WHERE 管理员用户名 = ?;";
-        try (Connection conn = connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setString(1, 管理员用户名);
-            pstmt.executeUpdate();
-        }
-    }
-
 
     // User 表的写入方法
-    public void insertUser(long 客户ID, String 用户名, String 用户级别, String 用户注册时间,
-                           BigDecimal 客户累计消费总金额, String 用户手机号, String 用户邮箱, String 用户密码) throws SQLException {
+    public void insertUser(long id, String username, String vipLevel, String signDate, BigDecimal totalMoney, String phoneNumber, String email, String password) throws SQLException {
         String sql = "INSERT INTO User (客户ID, 用户名, 用户级别, 用户注册时间, 客户累计消费总金额, 用户手机号, 用户邮箱, 用户密码) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setLong(1, 客户ID);
-            pstmt.setString(2, 用户名);
-            pstmt.setString(3, 用户级别);
-            pstmt.setString(4, 用户注册时间); // 注意：这里是字符串
-            pstmt.setBigDecimal(5, 客户累计消费总金额);
-            pstmt.setString(6, 用户手机号);
-            pstmt.setString(7, 用户邮箱);
-            pstmt.setString(8, 用户密码);
+            pstmt.setLong(1, id);
+            pstmt.setString(2, username);
+            pstmt.setString(3, vipLevel);
+            pstmt.setString(4, signDate); // 注意：这里是字符串
+            pstmt.setBigDecimal(5, totalMoney);
+            pstmt.setString(6, phoneNumber);
+            pstmt.setString(7, email);
+            pstmt.setString(8, password);
 
             pstmt.executeUpdate();
         }
     }
 
-    // User 表的更新方法
-    public void updateUser(Long id, String 用户名, String 用户级别, String 用户注册时间, BigDecimal 客户累计消费总金额, String 用户手机号, String 用户邮箱, String 用户密码) throws SQLException {
-        String sql = "UPDATE User SET 用户名 = ?, 用户级别 = ?, 用户注册时间 = ?, 客户累计消费总金额 = ?, 用户手机号 = ?, 用户邮箱 = ?, 用户密码 = ? WHERE 客户ID = ?";
+
+    public boolean updateUserPasswordByPhone(String phoneNum, String newPassword) throws SQLException {
+        String sql = "UPDATE User SET 用户密码 = ? WHERE 用户手机号 = ?";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, 用户名);
-            pstmt.setString(2, 用户级别);
-            pstmt.setString(3, 用户注册时间);
-            pstmt.setBigDecimal(4, 客户累计消费总金额);
-            pstmt.setString(5, 用户手机号);
-            pstmt.setString(6, 用户邮箱);
-            pstmt.setString(7, 用户密码);
-            pstmt.setLong(8, id);
+            pstmt.setString(1, newPassword);
+            pstmt.setString(2, phoneNum);
 
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+        }
+    }
+
+    public boolean updateUserPasswordByID(Long id, String newPassword) throws SQLException {
+        String sql = "UPDATE User SET 用户密码 = ? WHERE 客户ID = ?";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, newPassword);
+            pstmt.setLong(2, id);
+
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0; // 如果影响的行数大于0，则返回true，表示更新成功
+        }
+    }
+
+    public void updateUserTotalMoneyByID(Long id, BigDecimal totalMoney) throws SQLException {
+        String sql = "UPDATE User SET 客户累计消费总金额 = ? WHERE 客户ID = ?";
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setBigDecimal(1, totalMoney);
+            pstmt.setLong(2, id);
             pstmt.executeUpdate();
         }
     }
 
     // User 表的删除方法
-    public void deleteUser(long 客户ID) throws SQLException {
+    public void deleteUserByID(long id) throws SQLException {
         String sql = "DELETE FROM User WHERE 客户ID = ?;";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setLong(1, 客户ID);
+            pstmt.setLong(1, id);
             pstmt.executeUpdate();
         }
     }
 
-    public void deleteUserByPhoneNum(String 用户手机号) throws SQLException {
+    public void deleteUserByPhoneNum(String phoneNumber) throws SQLException {
         String sql = "DELETE FROM User WHERE 用户手机号 = ?;";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, 用户手机号);
+            pstmt.setString(1, phoneNumber);
             pstmt.executeUpdate();
         }
     }
 
     // Goods 表的写入方法
-    public void insertGoods(long 商品编号, String 商品名称, String 生产厂家, String 生产日期,
-                            String 型号, BigDecimal 进货价, BigDecimal 零售价, long 数量) throws SQLException {
+    public void insertGoods(long id, String name, String manufacturer, String produceDate,
+                            String marque, BigDecimal purchasePrice, BigDecimal retailPrice, long amount) throws SQLException {
         String sql = "INSERT INTO Goods (商品编号, 商品名称, 生产厂家, 生产日期, 型号, 进货价, 零售价, 数量) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setLong(1, 商品编号);
-            pstmt.setString(2, 商品名称);
-            pstmt.setString(3, 生产厂家);
-            pstmt.setString(4, 生产日期); // 注意：这里是字符串
-            pstmt.setString(5, 型号);
-            pstmt.setBigDecimal(6, 进货价);
-            pstmt.setBigDecimal(7, 零售价);
-            pstmt.setLong(8, 数量);
+            pstmt.setLong(1, id);
+            pstmt.setString(2, name);
+            pstmt.setString(3, manufacturer);
+            pstmt.setString(4, produceDate); // 注意：这里是字符串
+            pstmt.setString(5, marque);
+            pstmt.setBigDecimal(6, purchasePrice);
+            pstmt.setBigDecimal(7, retailPrice);
+            pstmt.setLong(8, amount);
 
             pstmt.executeUpdate();
         }
     }
 
     // Goods 表的更新方法
-    public void updateGoods(long 商品编号, String 商品名称, String 生产厂家, String 生产日期,
-                            String 型号, BigDecimal 进货价, BigDecimal 零售价, long 数量) throws SQLException {
+    public void updateGoods(long id, String name, String manufacturer, String produceDate,
+                            String marque, BigDecimal purchasePrice, BigDecimal retailPrice, long amount) throws SQLException {
         String sql = "UPDATE Goods SET 商品名称 = ?, 生产厂家 = ?, 生产日期 = ?, 型号 = ?, 进货价 = ?, 零售价 = ?, 数量 = ? WHERE 商品编号 = ?;";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, 商品名称);
-            pstmt.setString(2, 生产厂家);
-            pstmt.setString(3, 生产日期);
-            pstmt.setString(4, 型号);
-            pstmt.setBigDecimal(5, 进货价);
-            pstmt.setBigDecimal(6, 零售价);
-            pstmt.setLong(7, 数量);
-            pstmt.setLong(8, 商品编号);
+            pstmt.setString(1, name);
+            pstmt.setString(2, manufacturer);
+            pstmt.setString(3, produceDate);
+            pstmt.setString(4, marque);
+            pstmt.setBigDecimal(5, purchasePrice);
+            pstmt.setBigDecimal(6, retailPrice);
+            pstmt.setLong(7, amount);
+            pstmt.setLong(8, id);
 
             pstmt.executeUpdate();
         }
     }
 
     // Goods 表的删除方法
-    public void deleteGoods(long 商品编号) throws SQLException {
+    public void deleteGoods(long id) throws SQLException {
         String sql = "DELETE FROM Goods WHERE 商品编号 = ?;";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setLong(1, 商品编号);
+            pstmt.setLong(1, id);
             pstmt.executeUpdate();
         }
     }
 
     // ShoppingCart 表的写入方法
-    public void insertShoppingCart(long 商品编号, String 商品名称, BigDecimal 商品零售价, long 购买数量) throws SQLException {
+    public void insertShoppingCart(long id, String name, BigDecimal retailPrice, long amount) throws SQLException {
         String sql = "INSERT INTO ShoppingCart (商品编号, 商品名称, 商品零售价, 购买数量) VALUES (?, ?, ?, ?);";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setLong(1, 商品编号);
-            pstmt.setString(2, 商品名称);
-            pstmt.setBigDecimal(3, 商品零售价);
-            pstmt.setLong(4, 购买数量);
+            pstmt.setLong(1, id);
+            pstmt.setString(2, name);
+            pstmt.setBigDecimal(3, retailPrice);
+            pstmt.setLong(4, amount);
 
             pstmt.executeUpdate();
         }
     }
 
     // ShoppingCart 表的更新方法
-    public void updateShoppingCart(long 商品编号, String 商品名称, BigDecimal 商品零售价, long 购买数量) throws SQLException {
+    public void updateShoppingCart(long id, String name, BigDecimal retailPrice, long amount) throws SQLException {
         String sql = "UPDATE ShoppingCart SET 商品名称 = ?, 商品零售价 = ?, 购买数量 = ? WHERE 商品编号 = ?;";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, 商品名称);
-            pstmt.setBigDecimal(2, 商品零售价);
-            pstmt.setLong(3, 购买数量);
-            pstmt.setLong(4, 商品编号);
+            pstmt.setString(1, name);
+            pstmt.setBigDecimal(2, retailPrice);
+            pstmt.setLong(3, amount);
+            pstmt.setLong(4, id);
 
             pstmt.executeUpdate();
         }
     }
 
     // ShoppingCart 表的删除方法
-    public void deleteShoppingCart(long 商品编号) throws SQLException {
+    public void deleteShoppingCart(long id) throws SQLException {
         String sql = "DELETE FROM ShoppingCart WHERE 商品编号 = ?;";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setLong(1, 商品编号);
+            pstmt.setLong(1, id);
             pstmt.executeUpdate();
         }
     }
@@ -270,45 +264,17 @@ public class DatabaseManager {
 
 
     // ShoppingHistory 表的写入方法
-    public void insertShoppingHistory(String 购买时间, String 商品名称) throws SQLException {
+    public void insertShoppingHistory(String purchaseTime, String name) throws SQLException {
         String sql = "INSERT INTO ShoppingHistory (购买时间, 商品名称) VALUES (?, ?);";
         try (Connection conn = connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, 购买时间);
-            pstmt.setString(2, 商品名称);
+            pstmt.setString(1, purchaseTime);
+            pstmt.setString(2, name);
 
             pstmt.executeUpdate();
         }
     }
-
-    // ShoppingHistory 表的更新方法
-    public void updateShoppingHistory(String 原购买时间, String 原商品名称, String 新购买时间, String 新商品名称) throws SQLException {
-        String sql = "UPDATE ShoppingHistory SET 购买时间 = ?, 商品名称 = ? WHERE 购买时间 = ? AND 商品名称 = ?;";
-        try (Connection conn = connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setString(1, 新购买时间);
-            pstmt.setString(2, 新商品名称);
-            pstmt.setString(3, 原购买时间);
-            pstmt.setString(4, 原商品名称);
-
-            pstmt.executeUpdate();
-        }
-    }
-
-    // ShoppingHistory 表的删除方法
-    public void deleteShoppingHistory(String 购买时间, String 商品名称) throws SQLException {
-        String sql = "DELETE FROM ShoppingHistory WHERE 购买时间 = ? AND 商品名称 = ?;";
-        try (Connection conn = connect();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setString(1, 购买时间);
-            pstmt.setString(2, 商品名称);
-            pstmt.executeUpdate();
-        }
-    }
-
 
     // 获取表头的通用方法
     public String[] getHeaders(String table) throws SQLException {
