@@ -1,4 +1,4 @@
-# chart-manager
+# cart-manager
 
 1.管理员的功能:  
 （1）登录  
