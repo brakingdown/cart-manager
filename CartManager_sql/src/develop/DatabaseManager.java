@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class DatabaseManager {
     private static final String URL = "jdbc:mysql://localhost:3306/Shopping?user=root"; //Personalised
     private static final String USER = "root"; //Personalised
-    private static final String PASSWORD = "PASS"; //Personalised
+    private static final String PASSWORD = "PaSpSAps5"; //Personalised
 
     private Connection connect() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
@@ -326,7 +326,6 @@ public class DatabaseManager {
         }
         return headers.toArray(new String[0]);
     }
-
 
     // 显示表头的通用方法
     public void showHeader(String table) throws SQLException {
