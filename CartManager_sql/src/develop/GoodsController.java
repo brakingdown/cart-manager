@@ -152,7 +152,7 @@ public class GoodsController {
         long gid = Long.parseLong(id);
 
         System.out.println("请确认是否删除以下商品(y/n)");
-        showGoods(getGoodsById(id)); // 假设 getGoodsById 方法能够根据商品编号返回相应的商品信息
+        showGoods(getGoodsById(id));
         String judge = scanner.next();
         if(judge.equalsIgnoreCase("y")){
             dbManager.deleteGoods(gid); // 直接调用 deleteGoods 方法进行删除

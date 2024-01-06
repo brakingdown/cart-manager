@@ -150,7 +150,7 @@ public class ShoppingCartController {
             System.out.println("商品已从购物车中删除");
         } else {
             // 从购物车获取商品的其他信息
-            ShoppingCart shoppingCartGoods = getShoppingCartGoodsById(id); // 假设这个方法能够根据ID获取购物车中的商品信息
+            ShoppingCart shoppingCartGoods = getShoppingCartGoodsById(id);
             if (shoppingCartGoods != null) {
                 // 更新购物车中的商品数量
                 dbManager.updateShoppingCart(gid, shoppingCartGoods.getName(), BigDecimal.valueOf(shoppingCartGoods.getRetailPrice()), gAmount);
